@@ -1,4 +1,6 @@
 ECHO is on.
+```mermaid
+
 sequenceDiagram
     participant browser
     participant server
