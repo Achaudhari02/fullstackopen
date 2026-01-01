@@ -16,6 +16,10 @@ sequenceDiagram
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
     activate server
-    server-->>browser: Javascript code
+    server-->>browser: JavaScript file
     deactivate server
 
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: JSON file
+    deactivate server
