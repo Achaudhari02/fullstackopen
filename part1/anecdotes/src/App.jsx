@@ -30,40 +30,18 @@ const Button = (props) => {
 
 
 const App = () => {
+  const [value, setValue] = useState(10)
 
-  const [total, setTotal] = useState(0)
-  const [left, setLeft] = useState(0)
-  const [right, setRight] = useState(0)
+  const hello = (who) => () => console.log('hell', who)
+  const newValue = (newVal) => () => setValue(newVal)
 
-  const [allClicks, setAll] = useState([])
-
-  const handleClickLeft = () => {
-    setAll(allClicks.concat('L'))
-    console.log('left before', left)
-    const updatedLeft = left + 1
-    setLeft(updatedLeft)
-    console.log('left after', left)
-    setTotal(updatedLeft + right)
-  }
-
-  const handleClickRight = () => {
-    setAll(allClicks.concat("R"))
-    const updatedRight = right + 1
-    setRight(updatedRight)
-    setTotal(left + updatedRight)
-  }
+  
 
   return (
     <div>
-      {left}
-      <Button onClick={handleClickLeft} text='Left' />
-      <Button onClick={handleClickRight} text='right'/>
-      {right}
-      <History allClicks={allClicks} />
-      <div>
-        <button onClick={() => console.log(allClicks)}>History</button>
-        {total}
-      </div>
+      {value}
+      <button onClick={hello('Raban')}>Button</button>
+      <button onClick={newValue(value + 1)}>Button2</button>
     </div>
   )
  }
