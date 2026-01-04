@@ -30,13 +30,9 @@ const App = () => {
     }
   }
 
-
-
   const randomSelect = () => {
-
     const random = Math.floor(Math.random() * anecdotesLen)
     setSelected(random)
-
   }
 
   const addVote = (votes) => {
@@ -45,8 +41,6 @@ const App = () => {
     console.log(votesCopy)
     setVotes(votesCopy)
   }
-
-  
 
   return (
     <div>
