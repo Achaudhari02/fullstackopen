@@ -1,23 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import Form from './components/Form'
 import Person from './components/Person'
+import axios from 'axios'
+import phServices from './services/phonebook'
 
 const App = () => {
-    const [persons, setPersons] = useState([
-      { name: "Arto Hellas", number: "040-123456", id: 1 },
-      { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-      { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-      { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-    ]);
+
+    const [persons, setPersons] = useState([]);
+
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("")
   const [showAll, setShowAll] = useState(true)
   const [searchText, setSearchText] = useState('')
-  const [peopleToShow, setPeopleToShow] = useState(persons) 
 
-  console.log(persons);
-  
+  useEffect(() => {
+    phServices
+     .getAll()
+      .then((initialPersons) => setPersons(initialPersons))
+  },[])
+
 
   const onNameChange = (event) => {
     setNewName(event.target.value)
@@ -36,6 +38,23 @@ const App = () => {
     }
   }
 
+  const removePerson = (id) => {
+
+    const personToBeDeleted = persons.find((person) => person.id == id)
+    const isSure = confirm(`Delete ${personToBeDeleted.name} ?`)
+    console.log(isSure);
+    
+
+    if (isSure)  { 
+    phServices
+      .remove(id)
+      .then((deletedPerson) => {
+        setPersons(persons.filter((person) => person.id != deletedPerson.id))
+      })
+    }
+
+  }
+
   const showPeople = showAll ? persons : persons.filter((person) => person.name.toLowerCase().includes(searchText.toLowerCase()))
 
   const addPerson = (event) => {
@@ -48,11 +67,27 @@ const App = () => {
     const found = persons.find((person) => person.name == newName)
 
     if(!(found)){
-      setPersons(persons.concat(newPersonObj));
-      setNewName("")
-      setNewNumber("")
+      phServices
+        .create(newPersonObj)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName("")
+          setNewNumber("")
+        })
     }else{
-      alert(`${newName} already exist`)
+        const isSure = confirm(`update ${newName}'s number?`)
+
+        if (isSure){
+          phServices
+          .update(found.id, newPersonObj)
+          .then((updatedPerson) => {
+              setPersons(persons.map((person) => person.id == found.id ? {...person, number: newNumber} : person));
+              setNewName("");
+              setNewNumber("");
+          })
+        }
+          
+
     }
 
   }
@@ -64,7 +99,11 @@ const App = () => {
       <h2>Add New</h2>
       <Form addName={newName} addNumber={newNumber} onClickName={onNameChange} onClickNumber={onNumberChange} onClickbutton={addPerson}/>
       <h2>Numbers</h2>
-      {showPeople.map((person, i) => <Person key={i} person={person}/>)}
+      {showPeople.map((person, i) => {
+        return (
+          <Person key={i} person={person} removePerson={()=>removePerson(person.id)}/>
+        )
+      })}
     </div>
   );
 };
