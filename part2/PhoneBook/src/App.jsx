@@ -4,22 +4,31 @@ import Form from './components/Form'
 import Person from './components/Person'
 import axios from 'axios'
 import phServices from './services/phonebook'
+import Notification from "./components/Notification";
 
 const App = () => {
 
-    const [persons, setPersons] = useState([]);
+  const [persons, setPersons] = useState([
+  ]);
 
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("")
   const [showAll, setShowAll] = useState(true)
   const [searchText, setSearchText] = useState('')
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    phServices
-     .getAll()
-      .then((initialPersons) => setPersons(initialPersons))
+    phServices.getAll().then((initialPersons) =>
+      setPersons(
+        initialPersons.concat({
+          name: "roberto",
+          number: "212312312",
+          id: 233
+        })
+      )
+    );
   },[])
-
+  
 
   const onNameChange = (event) => {
     setNewName(event.target.value)
@@ -50,6 +59,15 @@ const App = () => {
       .remove(id)
       .then((deletedPerson) => {
         setPersons(persons.filter((person) => person.id != deletedPerson.id))
+      }).catch((message) =>{
+        console.log(message)
+        setError(`${message.code}: ${personToBeDeleted.name} has already been removed`)
+        setPersons(persons.filter((person) => person.id != personToBeDeleted.id ))
+        setTimeout(() => {
+          setError(null)
+        }, 5000);
+
+
       })
     }
 
@@ -73,6 +91,15 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName("")
           setNewNumber("")
+          setError(`${newPersonObj.name} added to the phonebook`)
+          setTimeout(() => {
+            setError(null)
+          }, 5000);
+        }).catch((message) => {
+          setError(`${message.code}: ${newPersonObj.name} has already been removed`)
+          setTimeout(() => {
+            setError(null)
+          }, 500);
         })
     }else{
         const isSure = confirm(`update ${newName}'s number?`)
@@ -84,25 +111,44 @@ const App = () => {
               setPersons(persons.map((person) => person.id == found.id ? {...person, number: newNumber} : person));
               setNewName("");
               setNewNumber("");
+              setError(`${newPersonObj.name}'s number has been updated`)
+              setTimeout(() => {
+                setError(null)
+              }, 5000);
+          }).catch((message) => {
+            setError(
+              `${message.code}: ${newPersonObj.name} has already been removed`
+            )
+            setTimeout(() => {
+              setError(null)
+            }, 5000);
           })
         }
-          
-
     }
-
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={error} />
       <Filter value={searchText} onChange={onSearchChange} />
       <h2>Add New</h2>
-      <Form addName={newName} addNumber={newNumber} onClickName={onNameChange} onClickNumber={onNumberChange} onClickbutton={addPerson}/>
+      <Form
+        addName={newName}
+        addNumber={newNumber}
+        onClickName={onNameChange}
+        onClickNumber={onNumberChange}
+        onClickbutton={addPerson}
+      />
       <h2>Numbers</h2>
       {showPeople.map((person, i) => {
         return (
-          <Person key={i} person={person} removePerson={()=>removePerson(person.id)}/>
-        )
+          <Person
+            key={i}
+            person={person}
+            removePerson={() => removePerson(person.id)}
+          />
+        );
       })}
     </div>
   );

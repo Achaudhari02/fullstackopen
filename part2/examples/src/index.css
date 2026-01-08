@@ -1,0 +1,30 @@
+h1{
+    color: rgb(12, 63, 202);
+    font-style: italic;
+}
+
+.note {
+  color: grey;
+  padding-top: 3px;
+  font-size: 15px;
+}
+
+button {
+    padding-bottom: 3px;
+}
+
+
+button:hover {
+    background-color: rgb(56, 58, 58);
+    color: aliceblue;
+}
+
+.error {
+  color: rgb(211, 0, 0);
+  background: lightgrey;
+  font-size: 20px;
+  border-style:groove;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}

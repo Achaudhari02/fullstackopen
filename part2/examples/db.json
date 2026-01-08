@@ -29,6 +29,12 @@
       "content": "hola",
       "important": false,
       "importance": true
+    },
+    {
+      "id": "8df7",
+      "content": "",
+      "important": false,
+      "importance": false
     }
   ]
 }
