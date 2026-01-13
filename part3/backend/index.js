@@ -20,9 +20,17 @@ let notes = [
   },
 ]
 
+const requestLogger = (req, res, next) => {
+  console.log("Method:", req.method);
+  console.log("Path:", req.path);
+  console.log("Body:", req.body);
+  console.log("----");
+  next();
+};
+app.use(requestLogger);
 app.use(cors())
-
 app.use(express.json());
+app.use(express.static("dist"));
 
 app.get("/", (request, response) => {
   response.send("<h1>Notes App</h1>");
