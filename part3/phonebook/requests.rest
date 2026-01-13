@@ -8,7 +8,17 @@ POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-    "name": "test person",
+    "name": "Backend person",
+    "number": "46464646464",
+    "test": "test"
+}
+
+###
+POST https://fullstackopen-1-78ij.onrender.com/api/persons
+content-type: application/json
+
+{
+    "name": "Live app",
     "number": "46464646464",
     "test": "test"
 }
