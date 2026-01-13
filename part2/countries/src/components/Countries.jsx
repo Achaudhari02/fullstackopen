@@ -28,8 +28,8 @@ const Countries = ({display}) => {
         return (
           <div>
             <h1 key={country.cca3}>{country.name.common}</h1>
-            <h4>{country.population}</h4>
-            <h4>{country.capital}</h4>
+            <h4>Population: {country.population}</h4>
+            <h4>Capitol: {country.capital}</h4>
             {country.independent ? (
               <h4>The country is Independent </h4>
             ) : (
